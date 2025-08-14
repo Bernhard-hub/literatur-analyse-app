@@ -1,201 +1,126 @@
 import React, { useState } from 'react';
 
-const App = () => {
-  const [message, setMessage] = useState('EVIDENRA Ultimate v3.1 lädt...');
-  const [documents, setDocuments] = useState([]);
+function App() {
+  const [files, setFiles] = useState([]);
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      setMessage('✅ EVIDENRA Ultimate v3.1 erfolgreich geladen!');
-    }, 1000);
-  }, []);
-
-  const handleFileUpload = (event) => {
-    const files = Array.from(event.target.files);
-    const newDocs = files.map(file => ({
-      id: Date.now() + Math.random(),
-      name: file.name,
-      size: file.size,
-      type: file.type
-    }));
-    setDocuments(prev => [...prev, ...newDocs]);
+  const handleFileUpload = (e) => {
+    const newFiles = Array.from(e.target.files);
+    setFiles(prev => [...prev, ...newFiles]);
   };
 
   return (
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      padding: '20px',
       fontFamily: 'Arial, sans-serif',
       color: 'white'
     }}>
-      {/* Header */}
       <header style={{
-        background: 'linear-gradient(90deg, #4F46E5, #7C3AED, #EC4899)',
-        padding: '2rem',
         textAlign: 'center',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+        marginBottom: '40px'
       }}>
         <h1 style={{
-          fontSize: '3rem',
+          fontSize: '48px',
           margin: '0',
-          fontWeight: 'bold',
           textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
         }}>
           🧠 EVIDENRA Ultimate v3.1
         </h1>
         <p style={{
-          fontSize: '1.2rem',
-          margin: '0.5rem 0 0 0',
+          fontSize: '20px',
+          margin: '10px 0',
           opacity: 0.9
         }}>
-          Wissenschaftliche KI-gestützte Literaturanalyse
+          Wissenschaftliche Literaturanalyse
         </p>
       </header>
 
-      {/* Main Content */}
       <main style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '2rem'
+        maxWidth: '800px',
+        margin: '0 auto'
       }}>
-        {/* Status */}
         <div style={{
           background: 'rgba(255,255,255,0.1)',
-          backdropFilter: 'blur(10px)',
-          padding: '1.5rem',
-          borderRadius: '12px',
-          marginBottom: '2rem',
-          border: '1px solid rgba(255,255,255,0.2)'
+          padding: '30px',
+          borderRadius: '15px',
+          textAlign: 'center',
+          marginBottom: '30px'
         }}>
-          <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.5rem' }}>🚀 Status</h2>
-          <p style={{ margin: 0, fontSize: '1.1rem' }}>{message}</p>
-        </div>
-
-        {/* Upload Section */}
-        <div style={{
-          background: 'rgba(255,255,255,0.1)',
-          backdropFilter: 'blur(10px)',
-          padding: '2rem',
-          borderRadius: '12px',
-          marginBottom: '2rem',
-          border: '1px solid rgba(255,255,255,0.2)',
-          textAlign: 'center'
-        }}>
-          <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.5rem' }}>📄 Dokumente hochladen</h2>
-          <p style={{ margin: '0 0 1.5rem 0', opacity: 0.8 }}>
-            Laden Sie TXT-Dateien für die Analyse hoch
-          </p>
+          <h2 style={{ marginBottom: '20px' }}>📄 Dokumente hochladen</h2>
           
           <label style={{
             display: 'inline-block',
-            background: 'linear-gradient(45deg, #10B981, #059669)',
+            background: '#10B981',
             color: 'white',
-            padding: '1rem 2rem',
-            borderRadius: '8px',
+            padding: '15px 30px',
+            borderRadius: '10px',
             cursor: 'pointer',
-            fontSize: '1.1rem',
-            fontWeight: 'bold',
-            border: 'none',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-            transition: 'transform 0.2s'
-          }}
-          onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-          onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
-          >
+            fontSize: '18px',
+            fontWeight: 'bold'
+          }}>
             📁 Dateien auswählen
             <input
               type="file"
               multiple
-              accept=".txt,text/plain"
+              accept=".txt"
               onChange={handleFileUpload}
               style={{ display: 'none' }}
             />
           </label>
         </div>
 
-        {/* Documents List */}
-        {documents.length > 0 && (
+        {files.length > 0 && (
           <div style={{
             background: 'rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(10px)',
-            padding: '2rem',
-            borderRadius: '12px',
-            border: '1px solid rgba(255,255,255,0.2)'
+            padding: '20px',
+            borderRadius: '15px'
           }}>
-            <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.5rem' }}>
-              📚 Hochgeladene Dokumente ({documents.length})
-            </h2>
-            <div style={{ display: 'grid', gap: '1rem' }}>
-              {documents.map(doc => (
-                <div key={doc.id} style={{
-                  background: 'rgba(255,255,255,0.1)',
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(255,255,255,0.1)'
-                }}>
-                  <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                    📄 {doc.name}
-                  </div>
-                  <div style={{ opacity: 0.7, fontSize: '0.9rem' }}>
-                    Größe: {(doc.size / 1024).toFixed(1)} KB | Typ: {doc.type || 'text/plain'}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <h3>📚 Hochgeladene Dateien ({files.length})</h3>
+            {files.map((file, index) => (
+              <div key={index} style={{
+                background: 'rgba(255,255,255,0.1)',
+                padding: '10px',
+                margin: '10px 0',
+                borderRadius: '8px'
+              }}>
+                📄 {file.name} ({Math.round(file.size/1024)} KB)
+              </div>
+            ))}
           </div>
         )}
 
-        {/* Features Preview */}
         <div style={{
-          marginTop: '2rem',
+          marginTop: '40px',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '1rem'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '20px'
         }}>
-          {[
-            { icon: '🧠', title: 'KI-Analyse', desc: 'Automatische Kategorisierung' },
-            { icon: '👥', title: 'Team-Kollaboration', desc: 'Inter-Rater-Reliabilität' },
-            { icon: '📊', title: 'Wissenschaftliche Berichte', desc: 'Professionelle Ergebnisse' },
-            { icon: '📖', title: 'Narrative Synthese', desc: 'Qualitative Interpretation' }
-          ].map((feature, index) => (
-            <div key={index} style={{
+          {['🧠 KI-Analyse', '👥 Team-Kollaboration', '📊 Berichte', '📖 Synthese'].map((feature, i) => (
+            <div key={i} style={{
               background: 'rgba(255,255,255,0.1)',
-              backdropFilter: 'blur(10px)',
-              padding: '1.5rem',
-              borderRadius: '12px',
-              border: '1px solid rgba(255,255,255,0.2)',
+              padding: '20px',
+              borderRadius: '10px',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>
-                {feature.icon}
+              <div style={{ fontSize: '40px', marginBottom: '10px' }}>
+                {feature.split(' ')[0]}
               </div>
-              <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.2rem' }}>
-                {feature.title}
-              </h3>
-              <p style={{ margin: 0, opacity: 0.8, fontSize: '0.9rem' }}>
-                {feature.desc}
-              </p>
+              <div>{feature.split(' ').slice(1).join(' ')}</div>
             </div>
           ))}
         </div>
       </main>
 
-      {/* Footer */}
       <footer style={{
         textAlign: 'center',
-        padding: '2rem',
-        opacity: 0.7,
-        marginTop: '3rem'
+        marginTop: '40px',
+        opacity: 0.7
       }}>
-        <p style={{ margin: 0 }}>
-          🚀 EVIDENRA Ultimate v3.1 - Phase 1: GitHub Pages Deployment Test
-        </p>
-        <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem' }}>
-          ✅ Wenn du das siehst, funktioniert GitHub Pages!
-        </p>
+        <p>✅ GitHub Pages Deployment Test erfolgreich!</p>
       </footer>
     </div>
   );
-};
+}
 
 export default App;
