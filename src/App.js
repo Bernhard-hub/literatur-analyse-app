@@ -1,11 +1,46 @@
+// 🔧 FIXED App.js - src/App.js
 import React, { useState } from 'react';
 
 function App() {
   const [files, setFiles] = useState([]);
+  
+  // ✅ FIX: Fehlende State-Variablen hinzugefügt
+  const [currentProject, setCurrentProject] = useState({
+    id: 'default-project',
+    name: 'EVIDENRA Ultimate Projekt',
+    documents: [],
+    categories: [],
+    codings: [],
+    patterns: [],
+    interpretations: [],
+    researchQuestions: [],
+    teamResults: [],
+    interRaterReliability: null,
+    methodology: null,
+    created: new Date().toISOString(),
+    updated: new Date().toISOString()
+  });
 
   const handleFileUpload = (e) => {
     const newFiles = Array.from(e.target.files);
     setFiles(prev => [...prev, ...newFiles]);
+    
+    // Update currentProject with new documents
+    const newDocuments = newFiles.map((file, index) => ({
+      id: `doc_${Date.now()}_${index}`,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      content: '', // Will be filled when file is read
+      wordCount: 0,
+      uploaded: new Date().toISOString()
+    }));
+    
+    setCurrentProject(prev => ({
+      ...prev,
+      documents: [...prev.documents, ...newDocuments],
+      updated: new Date().toISOString()
+    }));
   };
 
   return (
@@ -34,6 +69,13 @@ function App() {
         }}>
           Wissenschaftliche Literaturanalyse
         </p>
+        <div style={{
+          fontSize: '14px',
+          opacity: 0.8,
+          marginTop: '10px'
+        }}>
+          Projekt: {currentProject.name} | Dokumente: {currentProject.documents.length}
+        </div>
       </header>
 
       <main style={{
@@ -63,7 +105,7 @@ function App() {
             <input
               type="file"
               multiple
-              accept=".txt"
+              accept=".txt,.pdf,.docx"
               onChange={handleFileUpload}
               style={{ display: 'none' }}
             />
@@ -110,6 +152,34 @@ function App() {
             </div>
           ))}
         </div>
+
+        {/* Projekt-Status */}
+        <div style={{
+          marginTop: '40px',
+          background: 'rgba(255,255,255,0.1)',
+          padding: '20px',
+          borderRadius: '15px'
+        }}>
+          <h3>📊 Projekt-Status</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginTop: '15px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold' }}>{currentProject.documents.length}</div>
+              <div style={{ fontSize: '14px', opacity: 0.8 }}>Dokumente</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold' }}>{currentProject.categories.length}</div>
+              <div style={{ fontSize: '14px', opacity: 0.8 }}>Kategorien</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold' }}>{currentProject.codings?.length || 0}</div>
+              <div style={{ fontSize: '14px', opacity: 0.8 }}>Kodierungen</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold' }}>{currentProject.teamResults?.length || 0}</div>
+              <div style={{ fontSize: '14px', opacity: 0.8 }}>Team-Mitglieder</div>
+            </div>
+          </div>
+        </div>
       </main>
 
       <footer style={{
@@ -117,7 +187,10 @@ function App() {
         marginTop: '40px',
         opacity: 0.7
       }}>
-        <p>✅ GitHub Pages Deployment Test erfolgreich!</p>
+        <p>✅ GitHub Pages Deployment erfolgreich!</p>
+        <p style={{ fontSize: '12px', marginTop: '10px' }}>
+          Letztes Update: {new Date(currentProject.updated).toLocaleString('de-DE')}
+        </p>
       </footer>
     </div>
   );
