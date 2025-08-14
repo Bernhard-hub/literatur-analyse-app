@@ -1429,6 +1429,7 @@ WICHTIG: Antworte nur mit dem JSON.`;
   const tabs = [
     { id: 'overview', name: '🏠 Übersicht', icon: Brain },
     { id: 'upload', name: '📄 Upload', icon: Upload },
+ { id: 'coding', name: '🔍 Kodierung', icon: Edit },
     { id: 'analysis', name: '🧠 KI-Analyse', icon: Brain },
     { id: 'visualizations', name: '📊 Visualisierungen', icon: BarChart3 },
     { id: 'methodology', name: '📚 Methodologie', icon: BookOpen },
@@ -1925,6 +1926,22 @@ WICHTIG: Antworte nur mit dem JSON.`;
             )}
           </div>
         )}
+
+
+{/* Coding Tab */}
+{activeTab === 'coding' && (
+  <CodingInterface 
+    project={currentProject}
+    updateProject={updateProject}
+    onAiCoding={aiCodingAnalysis}
+    onManualCoding={handleManualCoding}
+    isAnalyzing={isAnalyzing}
+  />
+)}
+
+
+
+
 
         {/* Visualizations Tab */}
         {activeTab === 'visualizations' && (
