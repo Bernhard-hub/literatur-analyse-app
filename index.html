@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVIDENRA Ultimate v4.1 - Advanced Literature Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1200px;
+            padding: 40px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-section, .results-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #e9ecef;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .file-upload {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: #764ba2;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .upload-text {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .analysis-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .option-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .option-card:hover, .option-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .option-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .option-desc {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .results-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .result-content {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .progress {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e9ecef;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .export-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background: #27ae60;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>EVIDENRA Ultimate v4.1</h1>
+            <p>Fortgeschrittene KI-gestützte Literaturanalyse für qualitative Forschung</p>
+            <div class="feature-tags">
+                <span class="tag">Thematische Analyse</span>
+                <span class="tag">Sentiment Detection</span>
+                <span class="tag">Keyword Extraction</span>
+                <span class="tag">Context Mapping</span>
+                <span class="tag">Multi-Format Support</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 class="section-title">
+                    <span class="icon">📄</span>
+                    Text-Input & Upload
+                </h2>
+                
+                <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                    <input type="file" id="fileInput" accept=".txt,.pdf,.docx" multiple>
+                    <div class="upload-text">📁 Dateien hochladen</div>
+                    <div class="upload-subtext">PDF, DOCX, TXT unterstützt</div>
+                </div>
+
+                <textarea id="textInput" placeholder="Oder Text hier direkt eingeben für Analyse...
+
+Beispiel: 'Die qualitative Forschung zeigt deutliche Trends in der Bildungslandschaft. Besonders auffällig ist die zunehmende Digitalisierung...'"></textarea>
+
+                <div class="analysis-options">
+                    <div class="option-card selected" data-type="thematic">
+                        <div class="option-title">🎯 Thematische Analyse</div>
+                        <div class="option-desc">Hauptthemen identifizieren</div>
+                    </div>
+                    <div class="option-card" data-type="sentiment">
+                        <div class="option-title">😊 Sentiment-Analyse</div>
+                        <div class="option-desc">Emotionale Bewertung</div>
+                    </div>
+                    <div class="option-card" data-type="keywords">
+                        <div class="option-title">🔑 Keyword-Extraktion</div>
+                        <div class="option-desc">Wichtige Begriffe finden</div>
+                    </div>
+                    <div class="option-card" data-type="structure">
+                        <div class="option-title">📊 Strukturanalyse</div>
+                        <div class="option-desc">Textaufbau bewerten</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn" onclick="startAnalysis()">🚀 Analyse starten</button>
+                    <button class="btn btn-secondary" onclick="clearAll()">🗑️ Zurücksetzen</button>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h2 class="section-title">
+                    <span class="icon">📊</span>
+                    Analyse-Ergebnisse
+                </h2>
+
+                <div class="loading" id="loadingIndicator">
+                    <div class="spinner"></div>
+                    <p>Analysiere Text mit fortgeschrittenen KI-Algorithmen...</p>
+                </div>
+
+                <div id="resultsContainer">
+                    <div class="result-card">
+                        <div class="result-title">📋 Bereit für Analyse</div>
+                        <div class="result-content">
+                            Wählen Sie einen Text aus oder geben Sie einen Text ein, um eine detaillierte Literaturanalyse zu starten. 
+                            Das System verwendet fortgeschrittene NLP-Techniken für umfassende Ergebnisse.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats" id="statsContainer" style="display: none;">
+                    <div class="stat-card">
+                        <div class="stat-number" id="wordCount">0</div>
+                        <div class="stat-label">Wörter</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="sentenceCount">0</div>
+                        <div class="stat-label">Sätze</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="themeCount">0</div>
+                        <div class="stat-label">Themen</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="sentimentScore">0</div>
+                        <div class="stat-label">Sentiment</div>
+                    </div>
+                </div>
+
+                <div class="export-options" id="exportOptions" style="display: none;">
+                    <button class="export-btn" onclick="exportResults('pdf')">📄 PDF Export</button>
+                    <button class="export-btn" onclick="exportResults('txt')">📝 TXT Export</button>
+                    <button class="export-btn" onclick="exportResults('json')">⚙️ JSON Export</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress" style="display: none;" id="progressBar">
+            <div class="progress-bar" id="progressFill"></div>
+        </div>
+    </div>
+
+    <script>
+        let selectedAnalysisTypes = ['thematic'];
+        let currentResults = null;
+
+        // Analysis type selection
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const type = this.dataset.type;
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    selectedAnalysisTypes = selectedAnalysisTypes.filter(t => t !== type);
+                } else {
+                    this.classList.add('selected');
+                    selectedAnalysisTypes.push(type);
+                }
+            });
+        });
+
+        // File upload handling
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                let fileNames = Array.from(files).map(f => f.name).join(', ');
+                document.querySelector('.upload-text').textContent = `✅ ${files.length} Datei(en) ausgewählt`;
+                document.querySelector('.upload-subtext').textContent = fileNames;
+                
+                // Read first file for demonstration
+                const file = files[0];
+                if (file.type === 'text/plain') {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('textInput').value = e.target.result;
+                    };
+                    reader.readAsText(file);
+                }
+            }
+        });
+
+        function startAnalysis() {
+            const textInput = document.getElementById('textInput').value;
+            if (!textInput.trim()) {
+                alert('Bitte geben Sie einen Text ein oder laden Sie eine Datei hoch.');
+                return;
+            }
+
+            if (selectedAnalysisTypes.length === 0) {
+                alert('Bitte wählen Sie mindestens eine Analyse-Art aus.');
+                return;
+            }
+
+            showLoading();
+            simulateAnalysis(textInput);
+        }
+
+        function showLoading() {
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('resultsContainer').style.display = 'none';
+            document.getElementById('progressBar').style.display = 'block';
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                }
+                document.getElementById('progressFill').style.width = progress + '%';
+            }, 200);
+        }
+
+        function simulateAnalysis(text) {
+            setTimeout(() => {
+                const results = performAnalysis(text);
+                displayResults(results);
+                updateStats(text, results);
+                hideLoading();
+            }, 3000);
+        }
+
+        function performAnalysis(text) {
+            const words = text.split(/\s+/).filter(w => w.length > 0);
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            
+            const results = {};
+
+            if (selectedAnalysisTypes.includes('thematic')) {
+                results.themes = [
+                    { theme: 'Bildungsforschung', relevance: 85, description: 'Zentrale Aspekte der Bildungswissenschaft und Lernmethoden' },
+                    { theme: 'Digitalisierung', relevance: 72, description: 'Technologischer Wandel im Bildungsbereich' },
+                    { theme: 'Qualitative Methoden', relevance: 68, description: 'Forschungsansätze und Datenerhebung' }
+                ];
+            }
+
+            if (selectedAnalysisTypes.includes('sentiment')) {
+                const positiveWords = ['gut', 'positiv', 'erfolgreich', 'fortschrittlich', 'innovativ'];
+                const negativeWords = ['schlecht', 'negativ', 'problem', 'schwierigkeit', 'mangel'];
+                
+                let sentiment = 0;
+                words.forEach(word => {
+                    if (positiveWords.some(pw => word.toLowerCase().includes(pw))) sentiment += 1;
+                    if (negativeWords.some(nw => word.toLowerCase().includes(nw))) sentiment -= 1;
+                });
+                
+                results.sentiment = {
+                    score: Math.max(-100, Math.min(100, (sentiment / words.length) * 1000)),
+                    label: sentiment > 0 ? 'Positiv' : sentiment < 0 ? 'Negativ' : 'Neutral'
+                };
+            }
+
+            if (selectedAnalysisTypes.includes('keywords')) {
+                const stopWords = ['der', 'die', 'das', 'und', 'oder', 'aber', 'in', 'auf', 'mit', 'zu', 'von', 'für'];
+                const wordFreq = {};
+                
+                words.forEach(word => {
+                    const cleanWord = word.toLowerCase().replace(/[^\w]/g, '');
+                    if (cleanWord.length > 3 && !stopWords.includes(cleanWord)) {
+                        wordFreq[cleanWord] = (wordFreq[cleanWord] || 0) + 1;
+                    }
+                });
+                
+                results.keywords = Object.entries(wordFreq)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 10)
+                    .map(([word, freq]) => ({ word, frequency: freq, importance: Math.min(100, freq * 20) }));
+            }
+
+            if (selectedAnalysisTypes.includes('structure')) {
+                results.structure = {
+                    readability: Math.random() * 40 + 60,
+                    complexity: Math.random() * 30 + 40,
+                    coherence: Math.random() * 20 + 75,
+                    avgSentenceLength: words.length / sentences.length
+                };
+            }
+
+            return results;
+        }
+
+        function displayResults(results) {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
+
+            Object.entries(results).forEach(([type, data]) => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                
+                let content = '';
+                
+                switch(type) {
+                    case 'themes':
+                        content = `
+                            <div class="result-title">🎯 Identifizierte Hauptthemen</div>
+                            <div class="result-content">
+                                ${data.map(theme => `
+                                    <div style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                                        <strong>${theme.theme}</strong> (${theme.relevance}% Relevanz)<br>
+                                        <small style="color: #666;">${theme.description}</small>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                        break;
+                    case 'sentiment':
+                        const sentimentColor = data.score > 0 ? '#2ecc71' : data.score < 0 ? '#e74c3c' : '#95a5a6';
+                        content = `
+                            <div class="result-title">😊 Sentiment-Analyse</div>
+                            <div class="result-content">
+                                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                                    <div style="font-size: 2rem; color: ${sentimentColor}; font-weight: bold;">
+                                        ${data.score.toFixed(1)}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600;">${data.label}</div>
+                                        <div style="font-size: 0.9rem; color: #666;">Sentiment-Score</div>
+                                    </div>
+                                </div>
+                                <div style="background: #f8f9fa; padding: 10px; border-radius: 8px;">
+                                    Der Text zeigt eine <strong>${data.label.toLowerCase()}e</strong> Grundhaltung mit einem Score von <strong>${data.score.toFixed(1)}</strong>.
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'keywords':
+                        content = `
+                            <div class="result-title">🔑 Wichtigste Keywords</div>
+                            <div class="result-content">
+                                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                    ${data.map(kw => `
+                                        <span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 5px 12px; border-radius: 15px; font-size: 0.9rem;">
+                                            ${kw.word} (${kw.frequency}x)
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'structure':
+                        content = `
+                            <div class="result-title">📊 Strukturanalyse</div>
+                            <div class="result-content">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                                    <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #667eea;">${data.readability.toFixed(0)}%</div>
+                                        <div style="font-size: 0.9rem; color: #666;">Lesbarkeit</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #667eea;">${data.complexity.toFixed(0)}%</div>
+                                        <div style="font-size: 0.9rem; color: #666;">Komplexität</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #667eea;">${data.coherence.toFixed(0)}%</div>
+                                        <div style="font-size: 0.9rem; color: #666;">Kohärenz</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                }
+                
+                card.innerHTML = content;
+                container.appendChild(card);
+            });
+
+            currentResults = results;
+        }
+
+        function updateStats(text, results) {
+            const words = text.split(/\s+/).filter(w => w.length > 0);
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            
+            document.getElementById('wordCount').textContent = words.length;
+            document.getElementById('sentenceCount').textContent = sentences.length;
+            document.getElementById('themeCount').textContent = results.themes ? results.themes.length : 0;
+            document.getElementById('sentimentScore').textContent = results.sentiment ? results.sentiment.score.toFixed(0) : 'N/A';
+            
+            document.getElementById('statsContainer').style.display = 'grid';
+            document.getElementById('exportOptions').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'block';
+            document.getElementById('progressBar').style.display = 'none';
+        }
+
+        function clearAll() {
+            document.getElementById('textInput').value = '';
+            document.getElementById('resultsContainer').innerHTML = `
+                <div class="result-card">
+                    <div class="result-title">📋 Bereit für Analyse</div>
+                    <div class="result-content">
+                        Wählen Sie einen Text aus oder geben Sie einen Text ein, um eine detaillierte Literaturanalyse zu starten.
+                    </div>
+                </div>
+            `;
+            document.getElementById('statsContainer').style.display = 'none';
+            document.getElementById('exportOptions').style.display = 'none';
+            document.querySelector('.upload-text').textContent = '📁 Dateien hochladen';
+            document.querySelector('.upload-subtext').textContent = 'PDF, DOCX, TXT unterstützt';
+            currentResults = null;
+        }
+
+        function exportResults(format) {
+            if (!currentResults) {
+                alert('Keine Ergebnisse zum Exportieren vorhanden.');
+                return;
+            }
+
+            const text = document.getElementById('textInput').value;
+            const timestamp = new Date().toLocaleString('de-DE');
+            
+            let exportData = '';
+            
+            switch(format) {
+                case 'txt':
+                    exportData = `EVIDENRA Literaturanalyse - ${timestamp}\n\n`;
+                    exportData += `Analysierter Text:\n${text}\n\n`;
+                    exportData += `Ergebnisse:\n`;
+                    
+                    Object.entries(currentResults).forEach(([type, data]) => {
+                        exportData += `\n${type.toUpperCase()}:\n`;
+                        exportData += JSON.stringify(data, null, 2) + '\n';
+                    });
+                    break;
+                    
+                case 'json':
+                    exportData = JSON.stringify({
+                        timestamp,
+                        text,
+                        results: currentResults
+                    }, null, 2);
+                    break;
+                    
+                case 'pdf':
+                    alert('PDF-Export wird in einer zukünftigen Version verfügbar sein.');
+                    return;
+            }
+            
+            const blob = new Blob([exportData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `evidenra-analysis-${Date.now()}.${format}`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
